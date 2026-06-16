@@ -49,7 +49,7 @@ Respond in this format:
 [2-3 specific actions]`
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AQ.Ab8RN6J3EfCS8OBnF9S8iGIRzBDeJC9ce63aIYR5HvMToy8Aew`,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AQ.Ab8RN6J3EfCS8OBnF9S8iGIRzBDeJC9ce63aIYR5HvMToy8Aew`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
