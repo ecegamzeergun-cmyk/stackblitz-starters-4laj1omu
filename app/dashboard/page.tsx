@@ -21,7 +21,79 @@ async function getUserId() {
   const data = await res.json()
   return data.id
 }
+function AnalysisTab({ decisions }: { decisions: any[] }) {
+  const [analysis, setAnalysis] = useState<string>('')
+  const [loading, setLoading] = useState(false)
 
+  async function runAnalysis() {
+    if (decisions.length === 0) return
+    setLoading(true)
+
+    const decisionsText = decisions.map(d =>
+      `Asset: ${d.asset}, Action: ${d.action}, Reason: "${d.reason}", Emotion: ${d.bias || 'none'}`
+    ).join('\n')
+
+    const prompt = `You are a behavioral finance analyst. Analyze these investment decisions and identify emotional patterns and cognitive biases. Be specific and personal. End with 2-3 actionable recommendations.
+
+Decisions:
+${decisionsText}
+
+Respond in this format:
+## Your Behavioral Patterns
+[analysis]
+
+## What This Is Costing You
+[estimated impact]
+
+## Recommendations
+[2-3 specific actions]`
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=BURAYA_GEMINI_KEY`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    )
+
+    const data = await res.json()
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not generate analysis.'
+    setAnalysis(text)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    if (decisions.length > 0) runAnalysis()
+  }, [decisions])
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-gray-400 mb-2">Your AI-powered bias analysis</p>
+      {decisions.length === 0 ? (
+        <p className="text-gray-500">Log at least one decision to see your analysis.</p>
+      ) : loading ? (
+        <p className="text-gray-400 animate-pulse">Analyzing your patterns...</p>
+      ) : (
+        <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6">
+          {analysis.split('\n').map((line, i) => (
+            <p key={i} className={`${line.startsWith('##') ? 'text-[#e63946] font-bold text-base mt-4 mb-1' : 'text-gray-300 text-sm mb-1'}`}>
+              {line.replace('## ', '')}
+            </p>
+          ))}
+          <button
+            onClick={runAnalysis}
+            className="mt-4 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            Refresh ↻
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
 export default function Dashboard() {
   const [tab, setTab] = useState<'log' | 'decisions' | 'analysis'>('log')
   const [form, setForm] = useState({ asset: '', action: 'buy', reason: '', bias: '' })
@@ -189,6 +261,10 @@ export default function Dashboard() {
   </div>
 )}
       </div>
+      {/* Analysis Tab */}
+        {tab === 'analysis' && (
+          <AnalysisTab decisions={decisions} />
+        )}
     </main>
   )
 }
