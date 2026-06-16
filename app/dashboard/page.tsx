@@ -258,13 +258,10 @@ export default function Dashboard() {
         </div>
       ))
     )}
-  </div>
-)}
-      </div>
-      {/* Analysis Tab */}
-        {tab === 'analysis' && (
+    {tab === 'analysis' && (
           <AnalysisTab decisions={decisions} />
         )}
+
+      </div>
     </main>
-  )
 }
