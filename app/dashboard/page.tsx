@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 
+const SUPABASE_URL = 'https://obqcsjtgwvgmaaqjsmti.supabase.co'
+const ANON_KEY = 'BURAYA_ANON_KEY_YAZ'
+
 const BIASES = [
   'Fear / Panic',
   'FOMO',
@@ -12,6 +15,23 @@ const BIASES = [
   'Other',
 ]
 
+function getToken() {
+  return localStorage.getItem('sb_token')
+}
+
+async function getUserId() {
+  const token = getToken()
+  if (!token) return null
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    headers: {
+      'apikey': ANON_KEY,
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  const data = await res.json()
+  return data.id
+}
+
 export default function Dashboard() {
   const [form, setForm] = useState({
     asset: '',
@@ -19,16 +39,44 @@ export default function Dashboard() {
     reason: '',
     bias: '',
   })
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
   async function handleSubmit() {
     if (!form.asset || !form.reason) return
     setStatus('loading')
-    // Supabase'e kaydedeceğiz — şimdilik simüle ediyoruz
-    await new Promise(r => setTimeout(r, 800))
-    setStatus('success')
-    setForm({ asset: '', action: 'buy', reason: '', bias: '' })
-    setTimeout(() => setStatus('idle'), 2000)
+
+    const token = getToken()
+    const userId = await getUserId()
+
+    if (!token || !userId) {
+      setStatus('error')
+      return
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/decisions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+        'Authorization': `Bearer ${token}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        asset: form.asset,
+        action: form.action,
+        reason: form.reason,
+        bias: form.bias || null,
+      })
+    })
+
+    if (res.ok) {
+      setStatus('success')
+      setForm({ asset: '', action: 'buy', reason: '', bias: '' })
+      setTimeout(() => setStatus('idle'), 2000)
+    } else {
+      setStatus('error')
+    }
   }
 
   return (
@@ -83,6 +131,10 @@ export default function Dashboard() {
           >
             {status === 'loading' ? 'Saving...' : status === 'success' ? '✓ Logged!' : 'Log Decision'}
           </button>
+
+          {status === 'error' && (
+            <p className="text-red-400 text-sm">Something went wrong. Are you logged in?</p>
+          )}
         </div>
       </div>
     </main>
