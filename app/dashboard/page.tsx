@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 const SUPABASE_URL = 'https://obqcsjtgwvgmaaqjsmti.supabase.co'
-const ANON_KEY = 'BURAYA_ANON_KEY_YAZ'
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9icWNzanRnd3ZnbWFhcWpzbXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzEzMDEsImV4cCI6MjA5NjgwNzMwMX0.LBwc8NgUKHC9IG73f6ZzK2i2naOjJbS6ONCWOH0lKIc'
 
 const BIASES = [
   'Fear / Panic',
