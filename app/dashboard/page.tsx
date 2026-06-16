@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const SUPABASE_URL = 'https://obqcsjtgwvgmaaqjsmti.supabase.co'
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9icWNzanRnd3ZnbWFhcWpzbXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzEzMDEsImV4cCI6MjA5NjgwNzMwMX0.LBwc8NgUKHC9IG73f6ZzK2i2naOjJbS6ONCWOH0lKIc'
@@ -27,6 +28,26 @@ export default function Dashboard() {
   const [form, setForm] = useState({ asset: '', action: 'buy', reason: '', bias: '' })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
+  const [decisions, setDecisions] = useState<any[]>([])
+  const [loadingDecisions, setLoadingDecisions] = useState(false)
+
+  useEffect(() => {
+    if (tab === 'decisions') fetchDecisions()
+  }, [tab])
+
+  async function fetchDecisions() {
+    setLoadingDecisions(true)
+    const token = getToken()
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/decisions?order=created_at.desc`, {
+      headers: {
+        'apikey': ANON_KEY,
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    const data = await res.json()
+    setDecisions(Array.isArray(data) ? data : [])
+    setLoadingDecisions(false)
+  }
   async function handleSubmit() {
     if (!form.asset || !form.reason) return
     setStatus('loading')
