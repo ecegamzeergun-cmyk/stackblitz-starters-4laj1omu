@@ -154,20 +154,40 @@ export default function Dashboard() {
         )}
 
         {/* My Decisions Tab */}
-        {tab === 'decisions' && (
-          <div className="text-center text-gray-500 mt-20">
-            <p className="text-lg">Coming soon</p>
-            <p className="text-sm mt-2">Your decision history will appear here.</p>
+       {tab === 'decisions' && (
+  <div className="flex flex-col gap-4">
+    <p className="text-gray-400 mb-2">Your decision history</p>
+    {loadingDecisions ? (
+      <p className="text-gray-500">Loading...</p>
+    ) : decisions.length === 0 ? (
+      <p className="text-gray-500">No decisions logged yet.</p>
+    ) : (
+      decisions.map(d => (
+        <div key={d.id} className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-semibold text-white">{d.asset}</span>
+            <span className={`text-xs px-2 py-1 rounded font-medium ${
+              d.action === 'buy' ? 'bg-green-900 text-green-400' :
+              d.action === 'sell' ? 'bg-red-900 text-red-400' :
+              'bg-gray-800 text-gray-400'
+            }`}>
+              {d.action.toUpperCase()}
+            </span>
           </div>
-        )}
-
-        {/* Analysis Tab */}
-        {tab === 'analysis' && (
-          <div className="text-center text-gray-500 mt-20">
-            <p className="text-lg">Coming soon</p>
-            <p className="text-sm mt-2">Your AI-powered bias analysis will appear here.</p>
-          </div>
-        )}
+          <p className="text-gray-400 text-sm mb-2">{d.reason}</p>
+          {d.bias && (
+            <span className="text-xs bg-[#e63946]/20 text-[#e63946] px-2 py-1 rounded">
+              {d.bias}
+            </span>
+          )}
+          <p className="text-gray-600 text-xs mt-2">
+            {new Date(d.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </p>
+        </div>
+      ))
+    )}
+  </div>
+)}
       </div>
     </main>
   )
