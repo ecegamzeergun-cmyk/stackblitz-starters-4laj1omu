@@ -48,6 +48,7 @@ export default function Dashboard() {
     setDecisions(Array.isArray(data) ? data : [])
     setLoadingDecisions(false)
   }
+  
   async function handleSubmit() {
     if (!form.asset || !form.reason) return
     setStatus('loading')
