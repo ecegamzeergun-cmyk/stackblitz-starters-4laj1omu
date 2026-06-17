@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 const SUPABASE_URL = 'https://obqcsjtgwvgmaaqjsmti.supabase.co'
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9icWNzanRnd3ZnbWFhcWpzbXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzEzMDEsImV4cCI6MjA5NjgwNzMwMX0.LBwc8NgUKHC9IG73f6ZzK2i2naOjJbS6ONCWOH0lKIc'
-const GEMINI_KEY = 'AQ.Ab8RN6Jlj3KjFBGlQ06JLKaTErXADcncDftMvOYDxZpFe2flRw'
+const GEMINI_KEY = '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'
 
 const BIASES = [
   'Fear / Panic', 'FOMO', 'Herd Behavior',
@@ -50,16 +50,20 @@ Respond in this format:
 ## Recommendations
 [2-3 specific actions]`
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      }
-    )
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${OPENROUTER_KEY}`,
+  },
+  body: JSON.stringify({
+    model: 'google/gemini-2.0-flash-001',
+    messages: [{ role: 'user', content: prompt }]
+  })
+})
+
+const data = await res.json()
+const text = data.choices?.[0]?.message?.content || JSON.stringify(data)
 
     const data = await res.json()
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data)
