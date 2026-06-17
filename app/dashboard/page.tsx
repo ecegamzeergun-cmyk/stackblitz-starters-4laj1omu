@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 const SUPABASE_URL = 'https://obqcsjtgwvgmaaqjsmti.supabase.co'
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9icWNzanRnd3ZnbWFhcWpzbXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzEzMDEsImV4cCI6MjA5NjgwNzMwMX0.LBwc8NgUKHC9IG73f6ZzK2i2naOjJbS6ONCWOH0lKIc'
-const GEMINI_KEY = 'AQ.Ab8RN6J3EfCS8OBnF9S8iGIRzBDeJC9ce63aIYR5HvMToy8Aew'
+const GEMINI_KEY = 'AQ.Ab8RN6Jlj3KjFBGlQ06JLKaTErXADcncDftMvOYDxZpFe2flRw'
 
 const BIASES = [
   'Fear / Panic', 'FOMO', 'Herd Behavior',
@@ -51,7 +51,7 @@ Respond in this format:
 [2-3 specific actions]`
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
