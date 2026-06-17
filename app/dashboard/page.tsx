@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 const SUPABASE_URL = 'https://obqcsjtgwvgmaaqjsmti.supabase.co'
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9icWNzanRnd3ZnbWFhcWpzbXRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyMzEzMDEsImV4cCI6MjA5NjgwNzMwMX0.LBwc8NgUKHC9IG73f6ZzK2i2naOjJbS6ONCWOH0lKIc'
-const OPENROUTER_KEY = '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'
+const OPENROUTER_KEY = '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'
 
 const BIASES = ['Fear / Panic', 'FOMO', 'Herd Behavior', 'Overconfidence', 'Loss Aversion', 'Recency Bias', 'Other']
 
