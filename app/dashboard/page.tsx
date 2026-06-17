@@ -54,7 +54,7 @@ Respond in this format:
         'Authorization': `Bearer ${OPENROUTER_KEY}`,
       },
       body: JSON.stringify({
-        model: 'model: 'meta-llama/llama-3.1-8b-instruct:free',',
+        model: 'meta-llama/llama-3.1-8b-instruct:free',
         messages: [{ role: 'user', content: prompt }]
       })
     })
