@@ -62,7 +62,7 @@ Respond in this format:
     )
 
     const data = await res.json()
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Could not generate analysis.'
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data)
     setAnalysis(text)
     setLoading(false)
   }
